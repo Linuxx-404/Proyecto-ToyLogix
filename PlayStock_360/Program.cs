@@ -115,7 +115,8 @@ namespace PlayStock_360
 
                     Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.Write("-> Cantidad a vender: ");
-                    int cantAVender = int.Parse(Console.ReadLine());
+                    int cantAVender;
+                    while (!LeerEntero("-> Cantidad a vender: ", out cantAVender)) { }
 
                     if (cantAVender > stock[i])
                     {
@@ -123,6 +124,7 @@ namespace PlayStock_360
                         Console.WriteLine($"\n[ERROR] Stock insuficiente. Solo quedan {stock[i]} unidades disponibles.");
                         PausarConsola();
                         return;
+
                     }
 
                     Console.Write("-> Método de pago (Efectivo/Yape): ");
@@ -169,15 +171,16 @@ namespace PlayStock_360
         {
             Console.Clear();
             ImprimirEncabezadoOpcion("INGRESO DE LOTES (ABASTECIMIENTO)");
-
             Console.Write("-> Nombre del nuevo artículo/lote: ");
             string nuevoNom = Console.ReadLine().ToUpper();
-            Console.Write("-> Cantidad que ingresa: ");
-            int cant = int.Parse(Console.ReadLine());
-            Console.Write("-> Precio de venta unitario: ");
-            double precio = double.Parse(Console.ReadLine());
-            Console.Write("-> Asignar Almacén destino (1-3): ");
-            int alm = int.Parse(Console.ReadLine());
+            int cant;
+            while (!LeerEntero("-> Cantidad que ingresa: ", out cant)) { }
+
+            double precio;
+            while (!LeerDecimal("-> Precio de venta unitario: ", out precio)) { }
+
+            int alm;
+            while (!LeerEntero("-> Asignar Almacén destino (1-3): ", out alm)) { }
 
             nombres[totalReg] = nuevoNom;
             stock[totalReg] = cant;
@@ -291,6 +294,23 @@ namespace PlayStock_360
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"\n[¡!] {error}");
             PausarConsola();
+        }
+        static bool LeerEntero(string mensaje, out int resultado)
+        {
+            Console.Write(mensaje);
+            bool ok = int.TryParse(Console.ReadLine(), out resultado);
+            if (!ok)
+                MostrarMensajeError("ERROR: Debe ingresar un número entero válido.");
+            return ok;
+        }
+
+        static bool LeerDecimal(string mensaje, out double resultado)
+        {
+            Console.Write(mensaje);
+            bool ok = double.TryParse(Console.ReadLine(), out resultado);
+            if (!ok)
+                MostrarMensajeError("ERROR: Debe ingresar un valor numérico válido.");
+            return ok;
         }
 
         static void PausarConsola()
